@@ -127,14 +127,31 @@ def download_Video_Audio(path, vid_url, file_no):
     except OSError:
         print(yt.filename, "already exists in this directory! Skipping video...")
 
+    #Let's clean up the file name a bit
+    dash_index = yt.filename.find("-")
+    parenthetical_index = yt.filename.find("(")
+    if parenthetical_index == -1:
+        parenthetical_index = yt.filename.find("[")
+
+    new_filename = yt.filename[dash_index + 1 : parenthetical_index]
+    author = yt.filename[:dash_index - 1]
+    if author == "":
+        author = "Unknown"
+
     try:
-        os.rename(yt.filename+'.mp4',str(file_no)+'.mp4')
-        aud= 'ffmpeg -i '+str(file_no)+'.mp4'+' '+str(file_no)+'.wav'
-        final_audio='lame '+str(file_no)+'.wav'+' '+str(file_no)+'.mp3'
+        aud = 'ffmpeg -i \"'+str(new_filename)+'.mp4\"'+' \"'+str(file_no)+'.wav\"'
+        thumbnail = 'ffmpeg -y -i \"' + str(new_filename) + '.mp4\" -f mjpeg -ss 10 -vframes 1 160x120 \"' + str(file_no) + '.jpg\"'
+        final_audio ='lame \"'+str(file_no)+'.wav\"'+' \"'+str(new_filename)+'.mp3\"'
+        audio_plus_thumbnail = 'lame --ti \"' + str(file_no) + '.jpg\" \"' + str(new_filename) + '.mp3\"'
+        
         os.system(aud)
+        os.system(thumbnail)
         os.system(final_audio)
+        os.system(audio_plus_thumbnail)
+        os.remove(str(file_no)+'.jpg')
+        os.remove(str(new_filename)+'.mp4')
         os.remove(str(file_no)+'.wav')
-        print("sucessfully converted",yt.filename, "into audio!")
+        print("sucessfully converted" ,new_filename, "into audio!")
     except OSError:
         print(yt.filename, "There is some problem with the file names...")
  
