@@ -142,7 +142,7 @@ def download_Video_Audio(path, vid_url, file_no):
         aud = 'ffmpeg -i \"'+str(new_filename)+'.mp4\"'+' \"'+str(file_no)+'.wav\"'
         thumbnail = 'ffmpeg -y -i \"' + str(new_filename) + '.mp4\" -f mjpeg -ss 10 -vframes 1 160x120 \"' + str(file_no) + '.jpg\"'
         final_audio ='lame \"'+str(file_no)+'.wav\"'+' \"'+str(new_filename)+'.mp3\"'
-        audio_plus_thumbnail = 'lame --ti \"' + str(file_no) + '.jpg\" \"' + str(new_filename) + '.mp3\"'
+        audio_plus_thumbnail = 'lame --tv TPE2=\"' + author + '\" --ti \"' + str(file_no) + '.jpg\" \"' + str(new_filename) + '.mp3\"'
         
         os.system(aud)
         os.system(thumbnail)
