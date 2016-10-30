@@ -138,10 +138,12 @@ def download_Video_Audio(path, vid_url, file_no):
     if author == "":
         author = "Unknown"
 
+    pathslash = path + "/"
+
     try:
-        aud = 'ffmpeg -i \"'+str(yt.filename)+'.mp4\"'+' \"'+str(file_no)+'.wav\"'
-        thumbnail = 'ffmpeg -i \"' + str(yt.filename) + '.mp4\" -ss 00:00:01 -vframes 1 \"' + str(file_no) + '.png\"'
-        final_audio ='lame --ta \"' + author + '\" --ti \"' + str(file_no) + '.png\" \"' + str(file_no)+'.wav\"'+' \"'+str(new_filename)+'.mp3\"'
+        aud = 'ffmpeg -i \"'+pathslash+str(yt.filename)+'.mp4\"'+' \"'+pathslash+str(file_no)+'.wav\"'
+        thumbnail = 'ffmpeg -i \"' + pathslash + str(yt.filename) + '.mp4\" -ss 00:00:01 -vframes 1 \"' + pathslash + str(file_no) + '.png\"'
+        final_audio ='lame --ta \"' + author + '\" --ti \"' + pathslash + str(file_no) + '.png\" \"' + pathslash + str(file_no)+'.wav\"'+' \"'+ pathslash + str(new_filename)+'.mp3\"'
 
         os.system(aud)
         os.system(thumbnail)
@@ -162,7 +164,7 @@ def printUrls(vid_urls):
 if __name__ == '__main__':
     url = "https://www.youtube.com/playlist?list=PLfvxCUZ9EspopJOS8XhYrRJXLlPTadp5z"
     directory = "/Users/Tanishq/Music/iTunes/iTunes Media/Music/YouTube Playlist"
-    
+
     # make directory if dir specified doesn't exist
     try:
         os.makedirs(directory, exist_ok=True)
