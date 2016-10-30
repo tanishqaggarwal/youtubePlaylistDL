@@ -126,7 +126,7 @@ def download_Video_Audio(path, vid_url, file_no):
     if parenthetical_index == -1:
         parenthetical_index = yt.filename.find("[")
 
-    new_filename = yt.filename[dash_index + 2 : parenthetical_index - 1]
+    new_filename = yt.filename[dash_index + 1 : parenthetical_index - 1]
     author = yt.filename[:dash_index - 1]
     if author == "":
         author = "Unknown"
@@ -145,7 +145,7 @@ def download_Video_Audio(path, vid_url, file_no):
 
     try:
         aud = 'ffmpeg -i \"'+pathslash+str(yt.filename)+'.mp4\"'+' \"'+pathslash+str(file_no)+'.wav\"'
-        thumbnail = 'ffmpeg -i \"' + pathslash + str(yt.filename) + '.mp4\" -ss 00:00:01 -vframes 1 \"' + pathslash + str(file_no) + '.png\"'
+        thumbnail = 'ffmpeg -i \"' + pathslash + str(yt.filename) + '.mp4\" -ss 00:00:10 -vframes 1 \"' + pathslash + str(file_no) + '.png\"'
         final_audio ='lame --ta \"' + author + '\" --ti \"' + pathslash + str(file_no) + '.png\" \"' + pathslash + str(file_no)+'.wav\"'+' \"'+ pathslash + str(new_filename)+'.mp3\"'
 
         os.system(aud)
