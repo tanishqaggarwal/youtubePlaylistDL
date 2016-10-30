@@ -148,9 +148,9 @@ def download_Video_Audio(path, vid_url, file_no):
         os.system(aud)
         os.system(thumbnail)
         os.system(final_audio)
-        os.remove(str(file_no)+'.png')
-        os.remove(str(yt.filename)+'.mp4')
-        os.remove(str(file_no)+'.wav')
+        os.remove(pathslash + str(file_no)+'.png')
+        os.remove(pathslash + str(yt.filename)+'.mp4')
+        os.remove(pathslash + str(file_no)+'.wav')
         print("sucessfully converted" ,new_filename, "into audio!")
     except OSError:
         print(yt.filename, "There is some problem with the file names...")
