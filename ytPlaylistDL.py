@@ -118,14 +118,7 @@ def download_Video_Audio(path, vid_url, file_no):
         video = yt.get('mp4', '720p')
     except Exception:  # Sorts videos by resolution and picks the highest quality video if a 720p video doesn't exist
         video = sorted(yt.filter("mp4"), key=lambda video: int(video.resolution[:-1]), reverse=True)[0]
-
     print("downloading", yt.filename+" Video and Audio...")
-    try:
-        bar = progressBar()
-        video.download(path, on_progress=bar.print_progress, on_finish=bar.print_end)
-        print("successfully downloaded", yt.filename, "!")
-    except OSError:
-        print(yt.filename, "already exists in this directory! Skipping video...")
 
     #Let's clean up the file name a bit
     dash_index = yt.filename.find("-")
@@ -141,6 +134,16 @@ def download_Video_Audio(path, vid_url, file_no):
     pathslash = path + "/"
 
     try:
+        if os.path.isfile(pathslash + new_filename + ".mp3"):
+            raise OSError()
+
+        bar = progressBar()
+        video.download(path, on_progress=bar.print_progress, on_finish=bar.print_end)
+        print("successfully downloaded", yt.filename, "!")
+    except OSError:
+        print(yt.filename, "already exists in this directory! Skipping video...")
+
+    try:
         aud = 'ffmpeg -i \"'+pathslash+str(yt.filename)+'.mp4\"'+' \"'+pathslash+str(file_no)+'.wav\"'
         thumbnail = 'ffmpeg -i \"' + pathslash + str(yt.filename) + '.mp4\" -ss 00:00:01 -vframes 1 \"' + pathslash + str(file_no) + '.png\"'
         final_audio ='lame --ta \"' + author + '\" --ti \"' + pathslash + str(file_no) + '.png\" \"' + pathslash + str(file_no)+'.wav\"'+' \"'+ pathslash + str(new_filename)+'.mp3\"'
@@ -154,7 +157,6 @@ def download_Video_Audio(path, vid_url, file_no):
         print("sucessfully converted" ,new_filename, "into audio!")
     except OSError:
         print(yt.filename, "There is some problem with the file names...")
- 
 
 def printUrls(vid_urls):
     for url in vid_urls:
