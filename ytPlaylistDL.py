@@ -133,23 +133,21 @@ def download_Video_Audio(path, vid_url, file_no):
     if parenthetical_index == -1:
         parenthetical_index = yt.filename.find("[")
 
-    new_filename = yt.filename[dash_index + 1 : parenthetical_index]
+    new_filename = yt.filename[dash_index + 2 : parenthetical_index - 1]
     author = yt.filename[:dash_index - 1]
     if author == "":
         author = "Unknown"
 
     try:
-        aud = 'ffmpeg -i \"'+str(new_filename)+'.mp4\"'+' \"'+str(file_no)+'.wav\"'
-        thumbnail = 'ffmpeg -y -i \"' + str(new_filename) + '.mp4\" -f mjpeg -ss 10 -vframes 1 160x120 \"' + str(file_no) + '.jpg\"'
-        final_audio ='lame \"'+str(file_no)+'.wav\"'+' \"'+str(new_filename)+'.mp3\"'
-        audio_plus_thumbnail = 'lame --tv TPE2=\"' + author + '\" --ti \"' + str(file_no) + '.jpg\" \"' + str(new_filename) + '.mp3\"'
-        
+        aud = 'ffmpeg -i \"'+str(yt.filename)+'.mp4\"'+' \"'+str(file_no)+'.wav\"'
+        thumbnail = 'ffmpeg -i \"' + str(yt.filename) + '.mp4\" -ss 00:00:01 -vframes 1 \"' + str(file_no) + '.png\"'
+        final_audio ='lame --ta \"' + author + '\" --ti \"' + str(file_no) + '.png\" \"' + str(file_no)+'.wav\"'+' \"'+str(new_filename)+'.mp3\"'
+
         os.system(aud)
         os.system(thumbnail)
         os.system(final_audio)
-        os.system(audio_plus_thumbnail)
-        os.remove(str(file_no)+'.jpg')
-        os.remove(str(new_filename)+'.mp4')
+        os.remove(str(file_no)+'.png')
+        os.remove(str(yt.filename)+'.mp4')
         os.remove(str(file_no)+'.wav')
         print("sucessfully converted" ,new_filename, "into audio!")
     except OSError:
