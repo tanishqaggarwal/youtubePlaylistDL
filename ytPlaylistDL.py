@@ -127,7 +127,7 @@ def download_Video_Audio(path, vid_url, file_no):
         parenthetical_index = yt.filename.find("[")
 
     new_filename = yt.filename[dash_index + 1 : parenthetical_index - 1]
-    author = yt.filename[:dash_index - 1]
+    author = yt.filename[:dash_index]
     if author == "":
         author = "Unknown"
 
@@ -135,12 +135,12 @@ def download_Video_Audio(path, vid_url, file_no):
 
     try:
         if os.path.isfile(pathslash + new_filename + ".mp3"):
-            raise OSError()
+            raise FileNotFoundError()
 
         bar = progressBar()
         video.download(path, on_progress=bar.print_progress, on_finish=bar.print_end)
         print("successfully downloaded", yt.filename, "!")
-    except OSError:
+    except FileNotFoundError:
         print(yt.filename, "already exists in this directory! Skipping video...")
 
     try:
