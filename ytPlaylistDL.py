@@ -160,27 +160,23 @@ def printUrls(vid_urls):
         time.sleep(0.04)
         
 if __name__ == '__main__':
-    if len(sys.argv) < 2 or len(sys.argv) > 3:
-        print('USAGE: python ytPlaylistDL.py playlistURL OR python ytPlaylistDL.py playlistURL destPath')
-        exit(1)
-    else:
-        url = sys.argv[1]
-        directory = os.getcwd() if len(sys.argv) != 3 else sys.argv[2]
+    url = "https://www.youtube.com/playlist?list=PLfvxCUZ9EspopJOS8XhYrRJXLlPTadp5z"
+    directory = "/Users/Tanishq/Music/iTunes/iTunes Media/Music/YouTube Playlist"
     
-        # make directory if dir specified doesn't exist
-        try:
-            os.makedirs(directory, exist_ok=True)
-        except OSError as e:
-            print(e.reason)
-            exit(1)
+    # make directory if dir specified doesn't exist
+    try:
+        os.makedirs(directory, exist_ok=True)
+    except OSError as e:
+        print(e.reason)
+        exit(1)
 
-        if not url.startswith("http"):
-            url = 'https://' + url
+    if not url.startswith("http"):
+        url = 'https://' + url
 
-        playlist_page_content = getPageHtml(url)
-        vid_urls_in_playlist = getPlaylistVideoUrls(playlist_page_content, url)
+    playlist_page_content = getPageHtml(url)
+    vid_urls_in_playlist = getPlaylistVideoUrls(playlist_page_content, url)
 
-        # downloads videos and audios
-        for i,vid_url in enumerate(vid_urls_in_playlist):
-            download_Video_Audio(directory, vid_url, i)
-            time.sleep(1)
+    # downloads videos and audios
+    for i,vid_url in enumerate(vid_urls_in_playlist):
+        download_Video_Audio(directory, vid_url, i)
+        time.sleep(1)
