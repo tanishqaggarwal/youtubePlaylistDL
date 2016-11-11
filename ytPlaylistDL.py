@@ -164,7 +164,7 @@ def printUrls(vid_urls):
         time.sleep(0.04)
         
 if __name__ == '__main__':
-    url = "https://www.youtube.com/playlist?list=PLfvxCUZ9EspopJOS8XhYrRJXLlPTadp5z"
+    url = "https://www.youtube.com/playlist?list=PLfvxCUZ9Espr_Bkczd3cXCunIqPZl1jbx"
     directory = "/Users/Tanishq/Music/iTunes/iTunes Media/Music/YouTube Playlist"
 
     # make directory if dir specified doesn't exist
