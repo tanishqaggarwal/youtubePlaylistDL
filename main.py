@@ -126,8 +126,8 @@ def download_Video_Audio(path, vid_url, file_no):
     if parenthetical_index == -1:
         parenthetical_index = yt.filename.find("[")
 
-    new_filename = yt.filename[dash_index + 1 : parenthetical_index - 1]
-    author = yt.filename[:dash_index]
+    new_filename = yt.filename[dash_index + 2 : ]
+    author = yt.filename[:dash_index - 1]
     if author == "":
         author = "Unknown"
 
