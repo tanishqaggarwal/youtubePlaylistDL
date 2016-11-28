@@ -1,5 +1,5 @@
-# youtubePlaylistDL
-A simple script to download all videos in a youtube playlist (720p quality)
+# Youtube Song Downloader
+A simple script to download all songs in a Youtube playlist. It adds relevant ID3 tags and album art through web scraping.
 
 ### Requirements:
 
