@@ -106,9 +106,8 @@ def getPlaylistVideoUrls(page_content, url):
 
 def produceNewName(original_filename):
     dash_index = original_filename.find("-")
-    parenthetical_index = original_filename.find("(")
-    if parenthetical_index == -1:
-        parenthetical_index = original_filename.find("[")
+    if dash_index == -1:
+        dash_index = original_filename.find("|")
 
     new_filename = original_filename[dash_index + 2 : ]
     author = original_filename[:dash_index - 1]
@@ -129,19 +128,20 @@ def download_Video_Audio(path, vid_url, file_no):
         print("Error:", str(e), "- Skipping Video with url '"+vid_url+"'.")
         return
 
-    try:  # Tries to find the video in 720p
-        video = yt.get('mp4', '720p')
-    except Exception:  # Sorts videos by resolution and picks the highest quality video if a 720p video doesn't exist
-        video = sorted(yt.filter("mp4"), key=lambda video: int(video.resolution[:-1]), reverse=True)[0]
-    print("downloading", yt.filename+" Video and Audio...")
-
     new_filename, author = produceNewName(yt.filename)
 
     pathslash = path + "/"
     
     try:
+
         if os.path.isfile(pathslash + new_filename + ".mp3"):
             raise FileNotFoundError()
+
+        try:  # Tries to find the video in 720p
+            video = yt.get('mp4', '720p')
+        except Exception:  # Sorts videos by resolution and picks the highest quality video if a 720p video doesn't exist
+            video = sorted(yt.filter("mp4"), key=lambda video: int(video.resolution[:-1]), reverse=True)[0]
+        print("downloading", yt.filename+" Video and Audio...")
 
         bar = progressBar()
         video.download(path, on_progress=bar.print_progress, on_finish=bar.print_end)
