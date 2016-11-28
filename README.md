@@ -7,7 +7,8 @@ A simple script to download all songs in a Youtube playlist. It adds relevant ID
 #####**This script needs Python 3.4.1+**
 
 ```bash
-$ pip3 install pytube
+$ brew install ffmpeg
+$ pip3 install pytube bs4 Request
 ```
 
 ### Usage:
