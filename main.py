@@ -2,6 +2,7 @@
 
 import urllib.request
 import urllib.error
+from bs4 import BeautifulSoup
 
 import re
 import sys
@@ -103,10 +104,24 @@ def getPlaylistVideoUrls(page_content, url):
         print('No videos found.')
         exit(1)
 
+def produceNewName(original_filename):
+    dash_index = original_filename.find("-")
+    parenthetical_index = original_filename.find("(")
+    if parenthetical_index == -1:
+        parenthetical_index = original_filename.find("[")
 
+    new_filename = original_filename[dash_index + 2 : ]
+    author = original_filename[:dash_index - 1]
+    if author == "":
+        author = "Unknown"
+
+    return new_filename, author
+
+def getPublishingYear(video_url):
+    text = BeautifulSoup(urllib.request.urlopen(video_url).read(), "lxml")
+    return text.findAll("strong", { "class" : "watch-time-text" })[0].string[-4:]
 
 #function added to get audio files along with the video files from the playlist
-
 def download_Video_Audio(path, vid_url, file_no):
     try:
         yt = YouTube(vid_url)
@@ -120,43 +135,41 @@ def download_Video_Audio(path, vid_url, file_no):
         video = sorted(yt.filter("mp4"), key=lambda video: int(video.resolution[:-1]), reverse=True)[0]
     print("downloading", yt.filename+" Video and Audio...")
 
-    #Let's clean up the file name a bit
-    dash_index = yt.filename.find("-")
-    parenthetical_index = yt.filename.find("(")
-    if parenthetical_index == -1:
-        parenthetical_index = yt.filename.find("[")
-
-    new_filename = yt.filename[dash_index + 2 : ]
-    author = yt.filename[:dash_index - 1]
-    if author == "":
-        author = "Unknown"
+    new_filename, author = produceNewName(yt.filename)
 
     pathslash = path + "/"
-
+    
     try:
         if os.path.isfile(pathslash + new_filename + ".mp3"):
             raise FileNotFoundError()
 
         bar = progressBar()
         video.download(path, on_progress=bar.print_progress, on_finish=bar.print_end)
-        print("successfully downloaded", yt.filename, "!")
+    
+        print("successfully downloaded", new_filename, "!")
+
+        try:
+            os.system("sacad '{}' '{}' 480 '{}'".format(author, new_filename, pathslash + str(file_no) + ".png"))
+
+            aud = 'ffmpeg -i \"{}.mp4\" \"{}.wav\"'.format(pathslash + str(yt.filename), pathslash + str(file_no))
+            final_audio = 'lame --tt \"{}\" --ta \"{}\" --ti \"{}.png\" --ty {} \"{}.wav\" \"{}.mp3\"'.format(new_filename,
+                                                                                                              author, 
+                                                                                                              pathslash + str(file_no),
+                                                                                                              getPublishingYear(vid_url),
+                                                                                                              pathslash + str(file_no), 
+                                                                                                              pathslash + str(new_filename))
+
+            os.system(aud)
+            os.system(final_audio)
+            os.remove(pathslash + str(file_no)    +'.png')
+            os.remove(pathslash + str(yt.filename)+'.mp4')
+            os.remove(pathslash + str(file_no)    +'.wav')
+            print("sucessfully converted" ,new_filename, "into audio!")
+        except OSError:
+            print(yt.filename, "There is some problem with the file names...")
+
     except FileNotFoundError:
-        print(yt.filename, "already exists in this directory! Skipping video...")
-
-    try:
-        aud = 'ffmpeg -i \"'+pathslash+str(yt.filename)+'.mp4\"'+' \"'+pathslash+str(file_no)+'.wav\"'
-        thumbnail = 'ffmpeg -i \"' + pathslash + str(yt.filename) + '.mp4\" -ss 00:00:10 -vframes 1 \"' + pathslash + str(file_no) + '.png\"'
-        final_audio ='lame --ta \"' + author + '\" --ti \"' + pathslash + str(file_no) + '.png\" \"' + pathslash + str(file_no)+'.wav\"'+' \"'+ pathslash + str(new_filename)+'.mp3\"'
-
-        os.system(aud)
-        os.system(thumbnail)
-        os.system(final_audio)
-        os.remove(pathslash + str(file_no)+'.png')
-        os.remove(pathslash + str(yt.filename)+'.mp4')
-        os.remove(pathslash + str(file_no)+'.wav')
-        print("sucessfully converted" ,new_filename, "into audio!")
-    except OSError:
-        print(yt.filename, "There is some problem with the file names...")
+        print(new_filename, "already exists in this directory! Skipping video...")
 
 def printUrls(vid_urls):
     for url in vid_urls:
@@ -165,7 +178,7 @@ def printUrls(vid_urls):
         
 if __name__ == '__main__':
     url = "https://www.youtube.com/playlist?list=PLfvxCUZ9Espr_Bkczd3cXCunIqPZl1jbx"
-    directory = "/Users/Tanishq/Music/iTunes/iTunes Media/Music/YouTube Playlist"
+    directory = "/Users/Tanishq/Music/downloaded"
 
     # make directory if dir specified doesn't exist
     try:
