@@ -114,6 +114,8 @@ def produceNewName(original_filename):
     if author == "":
         author = "Unknown"
 
+    new_filename = re.sub("[\(\[].*?[\)\]]", "", new_filename)
+
     return new_filename, author
 
 def getPublishingYear(video_url):
