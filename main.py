@@ -117,7 +117,7 @@ def produceNewName(original_filename):
     new_filename = re.sub("[\(\[].*?[\)\]]", "", new_filename)
     new_filename = re.sub(' +',' ',new_filename)
 
-    return new_filename, author
+    return new_filename.rstrip(), author
 
 def getPublishingYear(video_url):
     text = BeautifulSoup(urllib.request.urlopen(video_url).read(), "lxml")
