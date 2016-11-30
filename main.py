@@ -115,6 +115,7 @@ def produceNewName(original_filename):
         author = "Unknown"
 
     new_filename = re.sub("[\(\[].*?[\)\]]", "", new_filename)
+    new_filename = re.sub(' +',' ',new_filename)
 
     return new_filename, author
 
