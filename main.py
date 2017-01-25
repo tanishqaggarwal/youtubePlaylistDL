@@ -157,8 +157,8 @@ def download_Video_Audio(path, vid_url, file_no):
             aud = 'ffmpeg -i \"{}.mp4\" \"{}.wav\"'.format(pathslash + str(yt.filename), pathslash + str(file_no))
             final_audio = 'lame --tt \"{}\" --ta \"{}\" --ty {} \"{}.wav\" \"{}.mp3\"'.format(new_filename,
                                                                                                               author, 
-                                                                                                              pathslash + str(file_no),
                                                                                                               getPublishingYear(vid_url), 
+                                                                                                              pathslash + str(file_no),
                                                                                                               pathslash + str(new_filename))
             if os.path.isfile(pathslash + str(file_no) + ".png"):
                 final_audio += "--ti \"{}.png\"".format(pathslash + str(file_no))
