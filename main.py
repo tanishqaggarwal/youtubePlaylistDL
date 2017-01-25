@@ -147,7 +147,7 @@ def download_Video_Audio(path, vid_url, file_no):
         print("downloading", yt.filename+" Video and Audio...")
 
         bar = progressBar()
-        video.download(path, on_progress=bar.print_progress, on_finish=bar.print_end)
+        video.download(path, on_progress=bar.print_progress, on_finish=bar.print_end, force_overwrite = True)
     
         print("successfully downloaded", new_filename, "!")
 
@@ -155,12 +155,13 @@ def download_Video_Audio(path, vid_url, file_no):
             os.system("sacad '{}' '{}' 480 '{}'".format(author, new_filename, pathslash + str(file_no) + ".png"))
 
             aud = 'ffmpeg -i \"{}.mp4\" \"{}.wav\"'.format(pathslash + str(yt.filename), pathslash + str(file_no))
-            final_audio = 'lame --tt \"{}\" --ta \"{}\" --ti \"{}.png\" --ty {} \"{}.wav\" \"{}.mp3\"'.format(new_filename,
+            final_audio = 'lame --tt \"{}\" --ta \"{}\" --ty {} \"{}.wav\" \"{}.mp3\"'.format(new_filename,
                                                                                                               author, 
                                                                                                               pathslash + str(file_no),
-                                                                                                              getPublishingYear(vid_url),
-                                                                                                              pathslash + str(file_no), 
+                                                                                                              getPublishingYear(vid_url), 
                                                                                                               pathslash + str(new_filename))
+            if os.path.isfile(pathslash + str(file_no) + ".png"):
+                final_audio += "--ti \"{}.png\"".format(pathslash + str(file_no))
 
             os.system(aud)
             os.system(final_audio)
