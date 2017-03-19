@@ -165,12 +165,15 @@ def download_Video_Audio(path, vid_url, file_no):
 
             os.system(aud)
             os.system(final_audio)
-            os.remove(pathslash + str(file_no)    +'.png')
             os.remove(pathslash + str(yt.filename)+'.mp4')
             os.remove(pathslash + str(file_no)    +'.wav')
+
+            if os.path.isfile(pathslash + str(file_no) + ".png"):
+                os.remove(pathslash + str(file_no)    +'.png')
+
             print("sucessfully converted" ,new_filename, "into audio!")
-        except OSError:
-            print(yt.filename, "There is some problem with the file names...")
+        except OSError as e:
+            print(yt.filename, "Looks like we got an error:", str(e))
 
     except FileNotFoundError:
         print(new_filename, "already exists in this directory! Skipping video...")
